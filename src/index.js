@@ -1,5 +1,11 @@
 import Phaser from "phaser";
-import logoImg from "./assets/logo.png";
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./components/App.jsx";
+import io from 'socket.io-client'
+import logoImg from './assets/logo.png'
+
+const socket = io.connect('172.16.30.221:4000')
 
 const config = {
   type: Phaser.AUTO,
@@ -7,17 +13,35 @@ const config = {
   width: 800,
   height: 600,
   scene: {
-    preload: preload,
-    create: create
+    preload,
+    create,
+    update
+  },
+  physics: {
+      default: 'arcade',
+      arcade: {
+          debug: false,
+          gravity: { y: 0 }
+      }
   }
 };
 
 const game = new Phaser.Game(config);
 
 function preload() {
-  this.load.image("logo", logoImg);
+    this.load.image('logo', logoImg)
 }
 
 function create() {
-  const logo = this.add.image(400, 150, "logo");
+
 }
+
+function update() {
+
+}
+
+function displayPlayer(self, player) {
+    
+}
+
+ReactDOM.render(<App />, document.getElementById("root"));
