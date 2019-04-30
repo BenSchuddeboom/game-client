@@ -5,8 +5,6 @@ import App from "./components/App.jsx";
 import io from 'socket.io-client'
 import logoImg from './assets/logo.png'
 
-const socket = io.connect('172.16.30.221:4000')
-
 const config = {
   type: Phaser.AUTO,
   parent: "phaser-example",
@@ -33,15 +31,25 @@ function preload() {
 }
 
 function create() {
+    const self = this
+    this.socket = io.connect('172.16.30.221:4000')
+    this.socket.on('currentPlayers', (players) => {
+        Object.keys(players).forEach(playerId => {
+            const player = players[playerId]
+            displayPlayer(self, player)
+        })
+    })
 
-}
-
-function update() {
 
 }
 
 function displayPlayer(self, player) {
-    
+    self.add.sprite(player.x, player.y, 'logo')
+        .setDisplaySize(50, 50)
+}
+
+function update() {
+
 }
 
 ReactDOM.render(<App />, document.getElementById("root"));
