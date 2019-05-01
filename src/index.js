@@ -7,14 +7,14 @@ import Scene from './Scene'
 const config = {
   type: Phaser.AUTO,
   parent: "phaser-example",
-  width: 800,
+  width: 1200,
   height: 600,
   scene: [Scene],
   physics: {
       default: 'arcade',
       arcade: {
           debug: false,
-          gravity: { y: 0 }
+          gravity: { y: 1500 }
       }
   }
 };
