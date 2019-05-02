@@ -30,7 +30,9 @@ export default class Scene extends Phaser.Scene {
         this.platforms.create(150, 300, 'platform').setOrigin(0, 0).setScale(0.35).refreshBody()
         this.platforms.create(1050, 300, 'platform').setOrigin(1, 0).setScale(0.35).refreshBody()
 
-        this.socket = io.connect('172.16.30.249:4000') //172.16.30.249 -- Albert
+        this.socket = io.connect('172.16.30.221:4000') 
+        //172.16.30.249 -- Albert
+        //172.16.30.221 -- Ben
         this.socket.on('currentPlayers', (players) => {
             Object.keys(players).forEach(id => {
                 if(id === self.socket.id) {
@@ -73,7 +75,11 @@ export default class Scene extends Phaser.Scene {
         this.cameras.main.setZoom(1.5)
         this.cameras.main.setDeadzone(2000, 1500)
 
-        
+        this.ScoreText = this.add.text(16, 16, '', { fontSize: '32px', fill: '#FFFFFF' });
+
+        // this.socket.on('scoreUpdate', function (player) {
+        //     self.ScoreText.setText('Score: ' + player.score);
+        //   });
     }
 
     update() {

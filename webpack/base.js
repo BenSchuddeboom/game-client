@@ -9,7 +9,8 @@ module.exports = {
     entry: "./src/index.js", //do we need this?
     output: {
         path: path.resolve("dist"),
-        filename: "index_bundle.js"
+        filename: "index_bundle.js",
+        publicPath: '/'
     },
     module: {
         rules: [
@@ -38,6 +39,9 @@ module.exports = {
                 use: "file-loader"
             }
         ]
+    },
+    devServer: {
+        historyApiFallback: true,
     },
     plugins: [
         new CleanWebpackPlugin(["dist"], {
