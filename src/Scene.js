@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import io from 'socket.io-client'
 import {addOtherPlayer, addPlayer, handleJump} from './playerFunctions'
-import {fireBall} from './ballFunctions'
+import {fireBall, updateOtherBalls} from './ballFunctions'
 
 export default class Scene extends Phaser.Scene {
     constructor() {
@@ -10,22 +10,26 @@ export default class Scene extends Phaser.Scene {
 
     preload() {
         this.load.image('background', './src/assets/finalNight.PNG')
+        this.load.image('platform', './src/assets/platform.png')
         this.load.image('player', './src/assets/logo.png')
         this.load.image('ball', './src/assets/ball.png')
     }
 
     create() {
         const self = this
-        
+
         this.add.image(0, 0, 'background')
             .setOrigin(0,0)
-            .setDisplaySize(1200, 600)
-        
-        this.balls = this.physics.add.group()
+            .setDisplaySize(1200, 800)
 
+        this.platforms = this.physics.add.staticGroup()
+        this.balls = this.physics.add.group()
         this.otherBalls = this.physics.add.group()
 
-        this.socket = io.connect('172.16.30.249:4000')
+        this.platforms.create(150, 300, 'platform').setOrigin(0, 0).setScale(0.35).refreshBody()
+        this.platforms.create(1050, 300, 'platform').setOrigin(1, 0).setScale(0.35).refreshBody()
+
+        this.socket = io.connect('172.16.30.249:4000') //172.16.30.249 -- Albert
         this.socket.on('currentPlayers', (players) => {
             Object.keys(players).forEach(id => {
                 if(id === this.socket.id) {
@@ -53,25 +57,17 @@ export default class Scene extends Phaser.Scene {
         })
 
         this.socket.on('updateOtherBalls', (balls) => {
-            console.log('triggered', balls)
-            balls.map((ball, index) => {
-                if(!self.otherBalls.getChildren()[index]) {
-                    self.otherBalls.create(ball.x, ball.y, 'ball')
-                        .setDisplaySize(50, 50)
-                        .setOrigin(0,0)
-                        .setBounce(0.7)
-                    self.otherBalls.getChildren().forEach(ball => {
-                        ball.setCollideWorldBounds(true)
-                    })        
-                } else {
-                    self.otherBalls.getChildren()[index].x = ball.x
-                    self.otherBalls.getChildren()[index].y = ball.y
-                }
-            })
+            updateOtherBalls(balls, self)
         })
+        
+        let angle = 0
+        this.input.on('pointermove', (event) => {
+            angle = Phaser.Math.Angle.Between(self.player.x, self.player.y, event.x, event.y)
+        }, this)
 
+        this.ballFired = false
         this.input.on('pointerdown', () => {
-            fireBall(this.player, self, 'ball', this.socket)
+            fireBall(this.player, self, 'ball', angle)
         }, this)
     }
 
@@ -82,11 +78,11 @@ export default class Scene extends Phaser.Scene {
 
         if (this.player) {
             if (this.cursors.left.isDown) {
-                this.player.setVelocityX(-260)
+                this.player.setAccelerationX(-800)
             } else if (this.cursors.right.isDown) {
-                this.player.setVelocityX(260)
+                this.player.setAccelerationX(800)
             } else {
-                this.player.setVelocityX(0)
+                this.player.setAccelerationX(0)
             }
 
             if(this.cursors.up.isDown) {
@@ -123,6 +119,10 @@ export default class Scene extends Phaser.Scene {
                     y: ball.y
                 }
             })
+
+            this.physics.add.collider(this.player, this.platforms)
+            this.physics.add.collider(this.balls, this.platforms)
+            this.physics.add.collider(this.balls)
         }
     }
 
