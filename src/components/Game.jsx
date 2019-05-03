@@ -1,6 +1,7 @@
 import React from "react";
 import Phaser from "phaser";
 import Scene from '../Scene'
+import './Game.css'
 
 export default class Game extends React.Component {
     componentDidMount() {
@@ -27,8 +28,6 @@ export default class Game extends React.Component {
     }
 
     render() {
-        return <div>
-            hoi aardappel
-        </div>
+        return <></>
     }
 }
