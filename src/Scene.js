@@ -8,7 +8,7 @@ export default class Scene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', './src/assets/finalNight.PNG')
+        this.load.image('background', './src/assets/background.jpg')
         this.load.image('platform', './src/assets/platform.png')
         this.load.image('player', './src/assets/pokeball.png')
         this.load.image('ball', './src/assets/ball.png')
@@ -89,10 +89,10 @@ export default class Scene extends Phaser.Scene {
 
         if (this.player) {
             if (this.cursors.left.isDown) {
-                this.player.setAngularVelocity(-150);
+                this.player.setAngularVelocity(-200);
             } else if (this.cursors.right.isDown) {
-                this.player.setAngularVelocity(150);
-            } else {
+                this.player.setAngularVelocity(200);
+            }  else {
                 this.player.setAngularVelocity(0);
             }
             
@@ -100,6 +100,12 @@ export default class Scene extends Phaser.Scene {
                 this.physics.velocityFromRotation(this.player.rotation + 1.5, 100, this.player.body.acceleration);
             } else {
                 this.player.setAcceleration(0);
+            }
+
+            if(this.cursors.space._justDown && !this.player.boost) {
+                this.player.boost = true
+                this.physics.velocityFromRotation(this.player.rotation + 1.5, 15000, this.player.body.acceleration)
+                setTimeout(() => this.player.boost = false, 5000)
             }
 
             const x = this.player.x;
