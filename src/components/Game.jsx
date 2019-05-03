@@ -1,8 +1,10 @@
 import React from "react";
 import Phaser from "phaser";
 import Scene from '../Scene'
+import {connect} from 'react-redux'
+import user from "../reducers/user";
 
-export default class Game extends React.Component {
+class Game extends React.Component {
     componentDidMount() {
         const config = {
         type: Phaser.AUTO,
@@ -17,9 +19,18 @@ export default class Game extends React.Component {
                 gravity: { y: 0 }
             }
         }
-        };
-
+    };
+        
         const game = new Phaser.Game(config);
+
+        setTimeout(() => {
+            const socket = game.scene.game.scene.scenes[0].socket
+            socket.emit("username", {
+                username: this.props.username
+            })
+        }, 2000)
+
+
     }
 
     shouldComponentUpdate() {
@@ -27,8 +38,16 @@ export default class Game extends React.Component {
     }
 
     render() {
-        return <div>
-            hoi aardappel
-        </div>
+        return ( <div>
+            
+        </div> )
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        username: state.user
+    }
+}
+
+export default connect(mapStateToProps)(Game)
