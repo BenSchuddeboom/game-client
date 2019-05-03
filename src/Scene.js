@@ -30,7 +30,7 @@ export default class Scene extends Phaser.Scene {
         this.platforms.create(150, 300, 'platform').setOrigin(0, 0).setScale(0.35).refreshBody()
         this.platforms.create(1050, 300, 'platform').setOrigin(1, 0).setScale(0.35).refreshBody()
 
-        this.socket = io.connect('localhost:4000') 
+        this.socket = io.connect('172.16.30.221:4000') 
         //172.16.30.249 -- Albert
         //172.16.30.221 -- Ben
         this.socket.on('currentPlayers', (players) => {

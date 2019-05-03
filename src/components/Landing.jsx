@@ -4,6 +4,7 @@ import {setUsername} from '../actions/setUsername'
 import {Link} from 'react-router-dom'
 import './Landing.css'
 
+
 class Landing extends Component {
     state = {
         name : '',
@@ -21,6 +22,7 @@ class Landing extends Component {
 
   render() {
     return (
+        <>
         <div className='landing-div'>
         <h1 className='landing'>Enter your name:</h1>
         <form>
@@ -31,10 +33,21 @@ class Landing extends Component {
                 value={this.state.name} 
                 onChange={this.handleChange} />
             <Link to='/game' onClick={this.handleSubmit}> 
-                <br/><button className='landing'> play </button>
+                <br/><button className='landing'> Play </button>
             </Link>
         </form>
         </div>
+        <ul className="symbols">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        </>
     )
   }
 }

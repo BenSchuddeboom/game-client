@@ -3,35 +3,37 @@ import Phaser from "phaser";
 import Scene from '../Scene'
 import './Game.css'
 import {connect} from 'react-redux'
-import user from "../reducers/user";
+import {setPlayers} from '../actions/setPlayers'
 
 class Game extends React.Component {
     componentDidMount() {
         const config = {
-        type: Phaser.AUTO,
-        parent: "phaser-example",
-        width: 800,
-        height: 600,
-        scene: [Scene],
-        physics: {
-            default: 'arcade',
-            arcade: {
-                debug: false,
-                gravity: { y: 0 }
+            type: Phaser.AUTO,
+            parent: "phaser-example",
+            width: 800,
+            height: 600,
+            scene: [Scene],
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    debug: false,
+                    gravity: { y: 0 }
+                }
             }
         }
-    };
         
         const game = new Phaser.Game(config);
+        let socket = null;
 
         setTimeout(() => {
-            const socket = game.scene.game.scene.scenes[0].socket
+            socket = game.scene.game.scene.scenes[0].socket
             socket.emit("username", {
                 username: this.props.username
             })
-        }, 2000)
-
-
+            socket.on('setPlayers', (players) => {
+                this.props.setPlayers(players)
+            })
+        }, 500)
     }
 
     shouldComponentUpdate() {
@@ -39,14 +41,16 @@ class Game extends React.Component {
     }
 
     render() {
-        return <></>
+        return (
+            <></>
+        )
     }
 }
 
 const mapStateToProps = state => {
     return {
-        username: state.user
+        username: state.user.name,
     }
 }
 
-export default connect(mapStateToProps)(Game)
+export default connect(mapStateToProps, {setPlayers})(Game)
