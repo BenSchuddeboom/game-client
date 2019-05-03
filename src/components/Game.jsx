@@ -1,6 +1,7 @@
 import React from "react";
 import Phaser from "phaser";
 import Scene from '../Scene'
+import './Game.css'
 import {connect} from 'react-redux'
 import user from "../reducers/user";
 
@@ -38,9 +39,7 @@ class Game extends React.Component {
     }
 
     render() {
-        return ( <div>
-            
-        </div> )
+        return <></>
     }
 }
 

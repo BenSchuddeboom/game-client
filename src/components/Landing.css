@@ -1,0 +1,33 @@
+.landing-div {
+    margin: 25% auto;
+    width: 80%;
+    height: 300px;
+    text-align: center;
+    background-color: linen;
+    border-radius: 1rem;
+}
+
+h1.landing {
+    font-family: fantasy;
+}
+
+.landing {
+    padding: 1rem;
+}
+
+input.landing {
+    font-size: 2rem;
+}
+
+button.landing {
+    animation: zoom 0.5s infinite alternate forwards;
+    background: none;
+    border: 0;
+    padding: none;
+    font-size: 3rem;
+}
+
+@keyframes zoom {
+    from { transform: scale(1) }
+    to { transform: scale(1.1) }
+}
