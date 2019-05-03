@@ -10,7 +10,7 @@ import store from './store'
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-        <div>
+        <div className="main">
           <Route exact path="/" component={Landing} />
           <Route exact path="/game" 
               render = {() => (
