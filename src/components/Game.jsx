@@ -9,7 +9,7 @@ class Game extends React.Component {
     componentDidMount() {
         const config = {
             type: Phaser.AUTO,
-            parent: "phaser-example",
+            parent: "gamediv",
             width: 800,
             height: 600,
             scene: [Scene],
