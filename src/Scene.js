@@ -8,10 +8,12 @@ export default class Scene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', './src/assets/background.jpg')
+        this.load.image('codaisseur', './src/assets/codaisseur.png')
+        this.load.image('background', './src/assets/background.png')
         this.load.image('platform', './src/assets/platform.png')
         this.load.image('player', './src/assets/pokeball.png')
         this.load.image('ball', './src/assets/ball.png')
+        this.load.image('bug', './src/assets/bug.png')
     }
 
     create() {
@@ -30,21 +32,23 @@ export default class Scene extends Phaser.Scene {
         this.platforms.create(150, 300, 'platform').setOrigin(0, 0).setScale(0.35).refreshBody()
         this.platforms.create(1050, 300, 'platform').setOrigin(1, 0).setScale(0.35).refreshBody()
 
-        this.socket = io.connect('172.16.30.221:4000') 
+        this.socket = io.connect('balls-mp.herokuapp.com') 
+        //http://balls-mp.herokuapp.com -- Nobody
         //172.16.30.249 -- Albert
         //172.16.30.221 -- Ben
+        
         this.socket.on('currentPlayers', (players) => {
             Object.keys(players).forEach(id => {
                 if(id === self.socket.id) {
-                    addPlayer(self, players[id], 'player')     
+                    addPlayer(self, players[id], 'codaisseur')     
                 } else {
-                    addOtherPlayers(self, players[id], 'player');
+                    addOtherPlayers(self, players[id], 'codaisseur');
                 }
             })
         })
 
         this.socket.on('newPlayer', (playerData) => {
-            addOtherPlayers(self, playerData, 'player')
+            addOtherPlayers(self, playerData, 'codaisseur')
         })
 
         this.socket.on('disconnect', (playerId) => {
@@ -65,9 +69,14 @@ export default class Scene extends Phaser.Scene {
 
         this.socket.on('spawnCookie', (cookieLocation) => {
             if (self.cookie) self.cookie.destroy();
-            self.cookie = self.physics.add.image(cookieLocation.x, cookieLocation.y, 'ball');
+            self.cookie = self.physics.add.image(cookieLocation.x, cookieLocation.y, 'bug');
             self.physics.add.collider(self.player, self.cookie, () => {
-                self.socket.emit('cookieCollected');
+                if(!self.player.collection) {
+                    self.socket.emit('cookieCollected');
+                    self.player.collection = true
+                    setTimeout(() => self.player.collection = false, 500)
+                }
+                
             }, null, self);
         });
 
